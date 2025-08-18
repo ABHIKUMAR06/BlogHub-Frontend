@@ -56,10 +56,7 @@ export const fecthAllBlog = async () => {
         },
     });
     if (!res.ok) throw new Error("Failed to load blog");
-    const data = await res.json();
 
-    const sortedBlogs = data.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-    );
-    return sortedBlogs
+    
+    return await res.json();
 }

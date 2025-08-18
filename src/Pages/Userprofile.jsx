@@ -33,10 +33,8 @@ const UserProfile = () => {
 
       try {
         const data =await  fetchMyBlogs()
-      const sortedBlogs = data.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-       );
-      setBlogs(sortedBlogs);
+     
+      setBlogs(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -112,7 +110,7 @@ const UserProfile = () => {
             detail={blog.detail}
             buid={blog.user_id?._id}
             uid={uid}
-            date={blog.user_id?.updatedAt}
+            date={blog.updatedAt}
             bid={blog._id}
             onDelete={handleBlogDelete}
             onUpdate={handleUpdate}

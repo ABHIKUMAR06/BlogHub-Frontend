@@ -19,6 +19,7 @@ const Home = () => {
 
       try {
         const data = await fecthAllBlog();
+        
       setBlogs(data);
       } catch (err) {
         setError(err.message);
@@ -60,7 +61,7 @@ const handleUpdate = (id, updatedFields) => {
             detail={blog.detail}
             buid={blog.user_id?._id}
             uid={uid}
-            date={blog.user_id?.updatedAt}
+            date={blog.updatedAt}
             bid={blog._id}
             onDelete={handleBlogDelete}
           onUpdate={handleUpdate}
