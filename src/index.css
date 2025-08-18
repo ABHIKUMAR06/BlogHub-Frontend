@@ -1,0 +1,6 @@
+@import "tailwindcss";
+.scrollable-box {
+ width: auto;
+ height: auto;
+    overflow-y: auto;   /* vertical scrollbar appears if content overflows */
+}
