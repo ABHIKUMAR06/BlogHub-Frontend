@@ -7,6 +7,8 @@ import { CiCircleCheck } from "react-icons/ci";
 import CommentSection from "./CommentSection";
 import BlogForm from "./form/BlogForm";
 import { BlogDelete, EditBlog } from "../api/blogApi";
+import Loader from "./loader/loader";
+import Banner from "./baner/baner";
 
 const BlogCard = ({
   name,
@@ -27,6 +29,8 @@ const BlogCard = ({
   const [status, setStatus] = useState("");
   const [response, setResponse] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
 
   const btnRef = useRef(null);
   const menuRef = useRef(null);
@@ -51,32 +55,47 @@ const BlogCard = ({
   }, [showOptions]);
 
   const handleBlogDelete = async () => {
-    try {
-      await BlogDelete(bid);
-      setStatus("success");
-      setResponse("Blog Deleted Successfully");
-      setShowPopup(true);
-      if (onDelete) onDelete(bid);
-    } catch (err) {
-      setStatus("");
-      setResponse(err.message);
-      setShowPopup(true);
-    }
-  };
+  try {
+    setShowLoader(true);
+    setShowToast(false); 
+    await BlogDelete(bid); 
+    setStatus("success");
+    setResponse("Blog Deleted Successfully");
+    setShowPopup(true);
+    setShowLoader(false);
+    if (onDelete) onDelete(bid); 
+  } catch (err) {
+    setStatus("error");
+    setResponse(err.message);
+    setShowLoader(false);
+    setShowPopup(true);
+  } finally {
+    setShowLoader(false);
+    
+  }
+};
+
 
   const handleSaveEdit = async ({ title: updatedTitle, detailHtml, image }) => {
-    const formData = new FormData();
-    formData.append("title", updatedTitle);
-    formData.append("detail", detailHtml || "");
-    if (image) formData.append("file", image);
-    else formData.append("oldFile", src || "");
-try{
-    const updatedBlog = await EditBlog(bid, formData);
-    setStatus("Success")
-    setIsEditing(false);
-    if (onUpdate) onUpdate(bid, updatedBlog);
-    }catch(err){setResponse(err.message)}
-    setStatus(" ")
+    try {
+      setShowLoader(true);
+      const formData = new FormData();
+      formData.append("title", updatedTitle);
+      formData.append("detail", detailHtml || "");
+      if (image) formData.append("file", image);
+      else formData.append("oldFile", src || "");
+      const updatedBlog = await EditBlog(bid, formData);
+      setStatus("success");
+      setResponse("Blog Updated Successfully");
+      setIsEditing(false);
+      if (onUpdate) onUpdate(bid, updatedBlog);
+    } catch (err) {
+      setStatus("error");
+      setResponse(err.message);
+    } finally {
+      setShowLoader(false);
+      setShowPopup(true);
+    }
   };
 
   useEffect(() => {
@@ -96,6 +115,7 @@ try{
           <HiDotsVertical size={20} />
         </button>
       )}
+
       {showOptions && (
         <div
           ref={menuRef}
@@ -114,11 +134,37 @@ try{
             <FiEdit size={15} /> Edit
           </button>
           <button
-            onClick={handleBlogDelete}
+            onClick={() => setShowToast(true)}
             className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left"
           >
             <MdDelete size={16} /> Delete
           </button>
+        </div>
+      )}
+
+      {showLoader && <Loader />}
+
+      {showToast && (
+        <div className="fixed inset-0 flex items-center justify-center z-30 bg-transparent backdrop-blur-xs">
+          <div className="relative bg-white rounded-2xl p-6 w-80 max-w-sm shadow-lg flex flex-col items-center text-center">
+            <p className="text-gray-800 text-lg font-medium mb-4">
+              Do you want to delete this Blog?
+            </p>
+            <div className="flex gap-4">
+              <button
+                onClick={handleBlogDelete}
+                className="px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 cursor-pointer transition"
+              >
+                Yes
+              </button>
+              <button
+                onClick={() => setShowToast(false)}
+                className="px-4 py-2 border rounded-xl hover:bg-gray-100 transition cursor-pointer"
+              >
+                No
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -127,14 +173,13 @@ try{
       </div>
 
       {isEditing ? (
-                <BlogForm
+        <BlogForm
           initialTitle={title}
           initialDetail={detail}
           initialImage={src}
           onSubmit={handleSaveEdit}
           onCancel={() => setIsEditing(false)}
         />
-
       ) : (
         <>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-4 leading-snug">{title}</h2>
@@ -165,26 +210,27 @@ try{
         </button>
         <span className="text-xs sm:text-sm">
           {isUpdated
-            ? "Updated at " + new Date(date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
-            : "Posted at " + new Date(createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+            ? "Updated at " +
+              new Date(date).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })
+            : "Posted at " +
+              new Date(createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
         </span>
       </div>
 
       {showComments && <CommentSection blogId={bid} uid={uid} />}
-
       {showPopup && (
-        <div
-          className={`fixed bottom-10 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-xl z-50 border shadow-lg w-[90%] sm:w-auto transition-all ${
-            status === "success"
-              ? "bg-green-100 text-green-800 border-green-400"
-              : "bg-red-100 text-red-800 border-red-400"
-          }`}
-        >
-          <div className="flex items-center gap-2 text-sm sm:text-base">
-            {status === "success" ? <CiCircleCheck /> : <MdOutlineCancel />}
-            <span>{response}</span>
-          </div>
-        </div>
+         <Banner 
+            type={status}
+            message={response}
+           />
       )}
     </div>
   );
