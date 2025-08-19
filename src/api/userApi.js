@@ -1,5 +1,4 @@
 const API_URI = "http://localhost:8000/api/user";
-const token = localStorage.getItem("token");
 
 export const createUser = async (name, email, password) => {
     const res = await fetch(`${API_URI}/reg`, {
@@ -42,12 +41,16 @@ export const loginUser = async ( email, password ) =>{
       throw new Error(errData.message);
     
     }
-
+    const data = await res.json();  
+     localStorage.setItem("token", data.token)
+        localStorage.setItem("uid", data.user?._id)
      
-    return await res.json();   
+    return  data
 }
 
 export const MyProfile = async() =>{
+const token = localStorage.getItem("token");
+
         const res = await fetch(`${API_URI}/profile`, {
           method: "GET",
           headers: {
@@ -66,6 +69,7 @@ return data
         
 }
 export const updateUser = async(name,email,password)=>{
+const token = localStorage.getItem("token");
 
  const res = await fetch(`${API_URI}/update`, {
       method: "PUT",
@@ -84,6 +88,8 @@ export const updateUser = async(name,email,password)=>{
     return await res.json();
 }
 export const userLogout = async () => {
+const token = localStorage.getItem("token");
+
   if (!token) return;
 
     const res = await fetch(`${API_URI}/logout`, {
@@ -94,11 +100,13 @@ export const userLogout = async () => {
     });
 
     if (!res.ok) {
+      
       const errData = await res.json().catch(() => ({ message: "Logout failed" }));
       throw new Error(errData.message || "Logout failed");
     }
 
     localStorage.removeItem("token");
+    localStorage.removeItem("uid");
     return await res.json(); 
 
 };

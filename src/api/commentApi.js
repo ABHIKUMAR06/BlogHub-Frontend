@@ -1,6 +1,7 @@
 const API_URI = "http://localhost:8000/api/comment"
-const token = localStorage.getItem("token");
 export const createComment = async (comment, blogId, parentId) => {
+    const token = localStorage.getItem("token");
+
     if (parentId) {
         const res = await fetch(`${API_URI}/create`, {
             method: "POST",
@@ -37,6 +38,8 @@ export const createComment = async (comment, blogId, parentId) => {
 
 
 export const getComment = async (blogId) => {
+    const token = localStorage.getItem("token");
+
     const res = await fetch(`${API_URI}/read/${blogId}`,
         {
             headers: {
@@ -52,21 +55,24 @@ export const getComment = async (blogId) => {
     return await res.json()
 }
 
-export const updateComment = async(cid,editText) =>{
-      const res = await fetch(`http://localhost:8000/api/comment/update/${cid}`, {
+export const updateComment = async (cid, editText) => {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(`http://localhost:8000/api/comment/update/${cid}`, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ comment: editText }),
-      });
+    });
 
-      if (!res.ok) throw new Error("Failed to update comment");
- return await res.json()
-    
+    if (!res.ok) throw new Error("Failed to update comment");
+    return await res.json()
+
 }
 export const deleteComment = async (cid) => {
+    const token = localStorage.getItem("token");
 
     const response = await fetch(`${API_URI}/delete/${cid}`, {
         method: "DELETE",

@@ -63,7 +63,7 @@ export default function BlogForm({
 
     await onSubmit({ title, detailHtml, image });
 
-    // Reset form after submit
+    
     setTitle("");
     setImage(null);
     if (imagePreview && imagePreview !== initialImage) URL.revokeObjectURL(imagePreview);

@@ -4,6 +4,7 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { MdOutlineCancel } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../api/userApi";
+import Banner from "../components/baner/baner";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -55,12 +56,11 @@ useEffect(() => {
     setErrors({});
     try {
 
-      const data = await loginUser(formData.email,formData.password)
+ await loginUser(formData.email,formData.password)
 
       
-        localStorage.setItem("token", data.token)
-        localStorage.setItem("uid", data.user?._id)
-        console.log("Saved token:", data.token);
+   
+
         setResponse("User Login successfully!");
         setStatus("success");
         setFormData({
@@ -89,18 +89,10 @@ useEffect(() => {
   return (
     <>
       {showPopup && (
-        <div
-          className={`fixed bottom-34 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-md z-50 border shadow-md w-[90%] sm:w-auto
-          ${status === "success"
-              ? "bg-green-100 text-green-800 border-green-400"
-              : "bg-red-100 text-red-800 border-red-400"
-            }`}
-        >
-          <div className="flex items-center gap-2 text-sm sm:text-base">
-            {status === "success" ? <CiCircleCheck /> : <MdOutlineCancel />}
-            <span>{response}</span>
-          </div>
-        </div>
+        <Banner 
+        type={status}
+        message={response}
+        />
       )}
 
       <div className="flex justify-center mb-2 px-4 sm:px-6 md:px-12">

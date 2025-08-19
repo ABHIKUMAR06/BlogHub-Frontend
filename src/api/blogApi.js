@@ -1,7 +1,8 @@
 const API_URI = "http://localhost:8000/api/blog"
-const token = localStorage.getItem("token");
 
 export const createBlog = async (formData) => {
+const token = localStorage.getItem("token");
+
     const res = await fetch(`${API_URI}/create`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
@@ -14,6 +15,8 @@ export const createBlog = async (formData) => {
     return res.json();
 }
 export const fetchMyBlogs = async () => {
+const token = localStorage.getItem("token");
+
     const res = await fetch(`${API_URI}/my/blogs`, {
         method: "GET",
         headers: {
@@ -28,6 +31,8 @@ export const fetchMyBlogs = async () => {
     return await res.json()
 }
 export const BlogDelete = async (bid) => {
+const token = localStorage.getItem("token");
+
     const res = await fetch(`${API_URI}/delete/${bid}`, {
 
         method: "DELETE",
@@ -39,6 +44,8 @@ export const BlogDelete = async (bid) => {
     return await res.json()
 }
 export const EditBlog = async (bid, formData) => {
+const token = localStorage.getItem("token");
+
     const res = await fetch(`${API_URI}/update/${bid}`, {
         method: "PUT",
         headers: {
@@ -50,6 +57,8 @@ export const EditBlog = async (bid, formData) => {
     return await res.json()
 }
 export const fecthAllBlog = async () => {
+const token = localStorage.getItem("token");
+
     const res = await fetch(`${API_URI}/read`, {
         headers: {
             Authorization: `Bearer ${token}`,
