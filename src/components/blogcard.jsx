@@ -221,7 +221,6 @@ const BlogCard = ({
           <span className="hidden sm:inline">Comments</span>
         </button>
 
-        {/* Date */}
         <span className="text-xs text-gray-400 italic">
           {isUpdated
             ? `Updated • ${formatDate(date)}`

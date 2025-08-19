@@ -8,7 +8,7 @@ export const createBlog = async (formData) => {
         body: formData,
     });
     if (!res.ok) {
-        const errData = await res.json().catch(() => ({ message: "Server error" }));
+        const errData = await res.json().catch(() => ({ message: errData.message }));
         throw new Error(errData.message || "Failed to create blog");
     }
     return res.json();

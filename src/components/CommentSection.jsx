@@ -359,7 +359,6 @@ const fetchComments = useCallback(async () => {
         </div>
       )}
 
-      {/* Comments List */}
       <div className="space-y-4">
         {commentTree.length > 0 ? (
           commentTree.map(comment => renderComment(comment))

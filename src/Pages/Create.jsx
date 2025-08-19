@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import BlogForm from "../components/form/BlogForm";
 import { createBlog } from "../api/blogApi";
 import Loader from "../components/loader/loader";
-import { MdOutlineCancel } from "react-icons/md";
-import { CiCircleCheck } from "react-icons/ci";
 import Banner from "../components/baner/baner";
 
 export default function Create() {
@@ -25,9 +23,9 @@ export default function Create() {
       setShowpopup(true)
 
       setBanner({ type: "success", message: "Blog created successfully!" });
-    } catch (error) {
+    } catch (err) {
       setShowpopup(true)
-      setBanner({ type: "error", message: error.message || "Failed to create blog." });
+      setBanner({ type: "error", message: err.message  });
     } finally {
       setIsSubmitting(false);
       setShowloader(false)
