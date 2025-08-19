@@ -1,4 +1,4 @@
-const API_URI = "http://localhost:8000/api/comment"
+const API_URI = `${import.meta.env.VITE_API_URI}comment`;
 export const createComment = async (comment, blogId, parentId) => {
     const token = localStorage.getItem("token");
 

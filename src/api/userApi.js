@@ -1,4 +1,4 @@
-const API_URI = "http://localhost:8000/api/user";
+const API_URI = `${import.meta.env.VITE_API_URI}user`;
 
 export const createUser = async (name, email, password) => {
     const res = await fetch(`${API_URI}/reg`, {

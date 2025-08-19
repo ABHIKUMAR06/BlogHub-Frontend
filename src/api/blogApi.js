@@ -1,7 +1,6 @@
-const API_URI = "http://localhost:8000/api/blog"
-
+const API_URI = `${import.meta.env.VITE_API_URI}blog`;
 export const createBlog = async (formData) => {
-const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     const res = await fetch(`${API_URI}/create`, {
         method: "POST",
@@ -15,7 +14,7 @@ const token = localStorage.getItem("token");
     return res.json();
 }
 export const fetchMyBlogs = async () => {
-const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     const res = await fetch(`${API_URI}/my/blogs`, {
         method: "GET",
@@ -31,7 +30,7 @@ const token = localStorage.getItem("token");
     return await res.json()
 }
 export const BlogDelete = async (bid) => {
-const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     const res = await fetch(`${API_URI}/delete/${bid}`, {
 
@@ -44,7 +43,7 @@ const token = localStorage.getItem("token");
     return await res.json()
 }
 export const EditBlog = async (bid, formData) => {
-const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     const res = await fetch(`${API_URI}/update/${bid}`, {
         method: "PUT",
@@ -57,7 +56,7 @@ const token = localStorage.getItem("token");
     return await res.json()
 }
 export const fecthAllBlog = async () => {
-const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     const res = await fetch(`${API_URI}/read`, {
         headers: {
@@ -66,6 +65,6 @@ const token = localStorage.getItem("token");
     });
     if (!res.ok) throw new Error("Failed to load blog");
 
-    
+
     return await res.json();
 }
