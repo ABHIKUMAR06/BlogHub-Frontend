@@ -3,12 +3,12 @@ import { HiDotsVertical } from "react-icons/hi";
 import { VscComment } from "react-icons/vsc";
 import { MdDelete, MdOutlineCancel } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
-import { CiCircleCheck } from "react-icons/ci";
 import CommentSection from "./CommentSection";
 import BlogForm from "./form/BlogForm";
 import { BlogDelete, EditBlog } from "../api/blogApi";
 import Loader from "./loader/loader";
 import Banner from "./baner/baner";
+import LikeButton from "./likeSection";
 
 const BlogCard = ({
   name,
@@ -55,25 +55,25 @@ const BlogCard = ({
   }, [showOptions]);
 
   const handleBlogDelete = async () => {
-  try {
-    setShowLoader(true);
-    setShowToast(false); 
-    await BlogDelete(bid); 
-    setStatus("success");
-    setResponse("Blog Deleted Successfully");
-    setShowPopup(true);
-    setShowLoader(false);
-    if (onDelete) onDelete(bid); 
-  } catch (err) {
-    setStatus("error");
-    setResponse(err.message);
-    setShowLoader(false);
-    setShowPopup(true);
-  } finally {
-    setShowLoader(false);
-    
-  }
-};
+    try {
+      setShowLoader(true);
+      setShowToast(false);
+      await BlogDelete(bid);
+      setStatus("success");
+      setResponse("Blog Deleted Successfully");
+      setShowPopup(true);
+      setShowLoader(false);
+      if (onDelete) onDelete(bid);
+    } catch (err) {
+      setStatus("error");
+      setResponse(err.message);
+      setShowLoader(false);
+      setShowPopup(true);
+    } finally {
+      setShowLoader(false);
+
+    }
+  };
 
 
   const handleSaveEdit = async ({ title: updatedTitle, detailHtml, image }) => {
@@ -103,6 +103,12 @@ const BlogCard = ({
     const timer = setTimeout(() => setShowPopup(false), 3000);
     return () => clearTimeout(timer);
   }, [showPopup]);
+  const formatDate = (date) =>
+    new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
 
   return (
     <div className="relative border border-gray-100 rounded-2xl p-6 mb-6 shadow-md hover:shadow-xl transition-all duration-300 bg-white max-w-3xl mx-auto overflow-visible">
@@ -201,36 +207,35 @@ const BlogCard = ({
 
       <div className="h-px bg-gray-200 my-4" />
 
-      <div className="flex flex-wrap items-center justify-between text-gray-500 hover:text-gray-700 gap-3">
+      <div className="flex flex-wrap items-center justify-between text-gray-500 text-sm">
+        <div className="flex items-center gap-1 hover:text-red-500 transition">
+          <LikeButton blogId={bid} />
+        </div>
+
         <button
           onClick={() => setShowComments((s) => !s)}
-          className="flex items-center gap-2 hover:cursor-pointer focus:outline-none hover:text-purple-600 transition"
+          aria-label="Toggle comments"
+          className="flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-purple-50 hover:text-purple-600 transition"
         >
-          <VscComment size={20} /> Comment
+          <VscComment size={18} />
+          <span className="hidden sm:inline">Comments</span>
         </button>
-        <span className="text-xs sm:text-sm">
+
+        {/* Date */}
+        <span className="text-xs text-gray-400 italic">
           {isUpdated
-            ? "Updated at " +
-              new Date(date).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })
-            : "Posted at " +
-              new Date(createdAt).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })}
+            ? `Updated • ${formatDate(date)}`
+            : `Posted • ${formatDate(createdAt)}`}
         </span>
       </div>
 
+
       {showComments && <CommentSection blogId={bid} uid={uid} />}
       {showPopup && (
-         <Banner 
-            type={status}
-            message={response}
-           />
+        <Banner
+          type={status}
+          message={response}
+        />
       )}
     </div>
   );

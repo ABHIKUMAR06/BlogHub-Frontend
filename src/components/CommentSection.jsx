@@ -48,6 +48,9 @@ const fetchComments = useCallback(async () => {
 
     const data = await getComment(blogId);
     setCommentTree(data);
+    
+   
+    
     const withReplies = new Set();
     data.forEach(c => {
       if (c.replies.length > 0) {
@@ -55,7 +58,7 @@ const fetchComments = useCallback(async () => {
       }
     });
     setExpandedReplies(withReplies);
-
+     
   } catch (error) {
     console.error("Error fetching comments:", error);
     showToast("Failed to load comments", "error");
